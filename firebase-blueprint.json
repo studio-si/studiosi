@@ -1,0 +1,72 @@
+{
+  "entities": {
+    "SalaoConfig": {
+      "title": "Configuração do Salão",
+      "description": "Dados básicos do salão Studio SI",
+      "type": "object",
+      "properties": {
+        "logoUrl": { "type": "string", "description": "URL da logo no Cloudinary" },
+        "nomeSalao": { "type": "string" },
+        "telefone": { "type": "string" },
+        "endereco": { "type": "string" }
+      },
+      "required": ["nomeSalao"]
+    },
+    "Holiday": {
+      "title": "Folga/Feriado",
+      "description": "Datas em que o salão não funcionará",
+      "type": "object",
+      "properties": {
+        "dataFolga": { "type": "string", "format": "date-time", "description": "Timestamp da folga" },
+        "motivo": { "type": "string" }
+      },
+      "required": ["dataFolga"]
+    },
+    "Service": {
+      "title": "Serviço",
+      "description": "Catálogo de serviços oferecidos",
+      "type": "object",
+      "properties": {
+        "nomeServico": { "type": "string" },
+        "descricao": { "type": "string" },
+        "valor": { "type": "number" },
+        "duracao": { "type": "integer", "description": "Duração em minutos" },
+        "ativo": { "type": "boolean" }
+      },
+      "required": ["nomeServico", "valor", "duracao"]
+    },
+    "Cliente": {
+      "title": "Cliente",
+      "description": "Cadastro de clientes",
+      "type": "object",
+      "properties": {
+        "fotoUrl": { "type": "string" },
+        "nomeCliente": { "type": "string" },
+        "telefone": { "type": "string" },
+        "dataCadastro": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nomeCliente"]
+    },
+    "Agendamento": {
+      "title": "Agendamento",
+      "description": "Registro de atendimento marcado",
+      "type": "object",
+      "properties": {
+        "clienteId": { "type": "string" },
+        "servicoId": { "type": "string" },
+        "dataHoraInicio": { "type": "string", "format": "date-time" },
+        "dataHoraFim": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["confirmado", "cancelado"] },
+        "valorTotal": { "type": "number" }
+      },
+      "required": ["clienteId", "servicoId", "dataHoraInicio", "dataHoraFim", "status"]
+    }
+  },
+  "firestore": {
+    "config/salao": { "schema": "SalaoConfig", "description": "Configurações gerais do salão" },
+    "config/holidays": { "schema": "Holiday", "description": "Datas de folga" },
+    "services": { "schema": "Service", "description": "Lista de serviços" },
+    "clientes": { "schema": "Cliente", "description": "Lista de clientes" },
+    "agendamentos": { "schema": "Agendamento", "description": "Lista de agendamentos" }
+  }
+}

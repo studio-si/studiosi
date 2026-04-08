@@ -1,0 +1,5 @@
+{
+  "name": "Studio SI Admin",
+  "description": "Sistema administrativo para o salão Studio SI, gerenciando agendamentos, clientes, serviços e finanças.",
+  "requestFramePermissions": []
+}

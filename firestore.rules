@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: config/salao
+    // Fields:
+    //   - logoUrl: string (optional)
+    //   - nomeSalao: string (required)
+    //   - telefone: string (optional)
+    //   - endereco: string (optional)
+    //
+    // Collection: config/auth
+    // Fields:
+    //   - password: string (required)
+    //
+    // Collection: config/holidays/list
+    // Fields:
+    //   - dataFolga: timestamp (required)
+    //   - motivo: string (optional)
+    //
+    // Collection: services
+    // Fields:
+    //   - nomeServico: string (required)
+    //   - descricao: string (optional)
+    //   - valor: number (required)
+    //   - duracao: integer (required)
+    //   - ativo: boolean (optional)
+    //
+    // Collection: clientes
+    // Fields:
+    //   - fotoUrl: string (optional)
+    //   - nomeCliente: string (required)
+    //   - telefone: string (optional)
+    //   - dataCadastro: timestamp (optional)
+    //
+    // Collection: agendamentos
+    // Fields:
+    //   - clienteId: string (required)
+    //   - clienteNome: string (required)
+    //   - servicoId: string (required)
+    //   - servicoNome: string (required)
+    //   - dataHoraInicio: timestamp (required)
+    //   - dataHoraFim: timestamp (required)
+    //   - status: string (required, enum: ["confirmado", "cancelado"])
+    //   - valorTotal: number (optional)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        (request.auth.token.email == "simonemariadasilvalp@gmail.com" && request.auth.token.email_verified == true) ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin" ||
+        // For simple password auth, we treat any authenticated user as admin if they signed in anonymously
+        // (This is a simplification for this specific app's architecture)
+        request.auth.token.firebase.sign_in_provider == 'anonymous'
+      );
+    }
+
+    // Allow public access as requested by the user
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
